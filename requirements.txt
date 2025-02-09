@@ -1,0 +1,13 @@
+# Core Deep Learning Frameworks
+torch
+torchvision
+
+# Symbolic AI & Reasoning
+sympy
+
+# Tool Integration
+numpy
+scipy
+
+# Development & Testing
+pytest

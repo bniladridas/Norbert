@@ -1,0 +1,14 @@
+[tool.pytest.ini_options]
+addopts = "-v -s --doctest-modules"
+testpaths = ["tests"]
+
+[tool.black]
+line-length = 88
+target-version = ['py39']
+include = '\.pyi?$'
+
+[tool.mypy]
+ignore_missing_imports = true
+check_untyped_defs = true
+disallow_any_generics = true
+strict_optional = true
