@@ -76,6 +76,53 @@ tensor([
 ### Privacy Notice
 ⚠️ **IMPORTANT:** Do not share model configurations or test outputs containing sensitive information.
 
+## Running Norbert: CUDA and Device Selection
+
+#### Automatic Device Detection
+
+Norbert automatically detects and utilizes available computational resources:
+
+```python
+import torch
+from norbert.core.model import NorbertBaseModel
+
+# The model will automatically use CUDA if available
+model = NorbertBaseModel(config)
+
+# Verify the device being used
+print(f"Model is running on: {next(model.parameters()).device}")
+```
+
+#### Explicit Device Selection
+
+You can explicitly control device selection:
+
+```python
+# Force CPU usage
+model = NorbertBaseModel(config, device='cpu')
+
+# Force CUDA usage (will raise an error if no CUDA available)
+model = NorbertBaseModel(config, device='cuda')
+
+# Select a specific CUDA device
+model = NorbertBaseModel(config, device='cuda:0')  # First GPU
+model = NorbertBaseModel(config, device='cuda:1')  # Second GPU
+```
+
+#### System Requirements
+- **Without CUDA:** Any system with Python 3.13.2+
+- **With CUDA:** 
+  - NVIDIA GPU with CUDA support
+  - CUDA Toolkit 11.x or 12.x
+  - Compatible NVIDIA GPU driver
+
+#### Performance Tips
+- For multi-GPU systems, use `torch.nn.DataParallel` or `torch.nn.parallel.DistributedDataParallel`
+- Monitor GPU memory usage during large model training
+- Use mixed precision training for improved performance
+
+**Note:** Always ensure your PyTorch installation matches your CUDA version.
+
 ## Test Verification Script
 ```python
 import torch
