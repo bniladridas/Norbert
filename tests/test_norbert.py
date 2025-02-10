@@ -38,6 +38,98 @@ class TestNorbertArchitecture:
         output = model(inputs)
         assert output is not None, "Multimodal input processing failed"
     
+    def test_advanced_multimodal_input_processing(self, model_config):
+        """Comprehensive test for advanced multimodal input processing"""
+        model = NorbertBaseModel(model_config)
+        
+        # Test various input scenarios
+        test_cases = [
+            # Single modality inputs
+            {'text': torch.randn(1, 512, 768)},
+            {'image': torch.randn(1, 3, 224, 224)},
+            {'equation': torch.randn(1, 100)},
+            {'code': torch.randn(1, 512, 768)},
+            
+            # Multiple modality inputs
+            {
+                'text': torch.randn(1, 512, 768),
+                'image': torch.randn(1, 3, 224, 224)
+            },
+            {
+                'text': torch.randn(1, 512, 768),
+                'equation': torch.randn(1, 100),
+                'code': torch.randn(1, 512, 768)
+            }
+        ]
+        
+        for inputs in test_cases:
+            # Ensure no errors are raised
+            try:
+                output = model(inputs)
+                
+                # Validate output dimensions
+                assert output.dim() == 1, f"Incorrect output dimensions for {inputs.keys()}"
+                assert output.size(0) == 10, "Output size should match classification head"
+                
+                # Check for non-zero outputs
+                assert not torch.allclose(output, torch.zeros_like(output)), \
+                    f"Zero output for input modalities: {inputs.keys()}"
+            
+            except Exception as e:
+                pytest.fail(f"Failed to process input modalities {inputs.keys()}: {str(e)}")
+    
+    def test_input_attention_mechanism(self, model_config):
+        """Test the dynamic input attention mechanism"""
+        # Set a fixed random seed for reproducibility
+        torch.manual_seed(42)
+        
+        model = NorbertBaseModel(model_config)
+        
+        # Create inputs with different characteristics
+        inputs = {
+            'text': torch.randn(1, 512, 768),  # High-information text
+            'image': torch.randn(1, 3, 224, 224),  # Visual input
+            'equation': torch.randn(1, 100),  # Symbolic representation
+            'code': torch.randn(1, 512, 768)  # Structured code
+        }
+        
+        # Enable dropout during inference
+        model.train()
+        
+        # Run multiple times to check consistency
+        outputs = [model(inputs) for _ in range(5)]
+        
+        # Compute pairwise differences
+        differences = [
+            torch.norm(outputs[i] - outputs[j]).item() 
+            for i in range(len(outputs)) 
+            for j in range(i+1, len(outputs))
+        ]
+        
+        # Check variation characteristics
+        assert len(set(differences)) > 1, "Outputs are too similar"
+        assert any(diff > 1e-3 for diff in differences), "No meaningful variation detected"
+        assert any(diff < 1 for diff in differences), "Variation is too extreme"
+    
+    def test_input_preprocessing_robustness(self, model_config):
+        """Test robustness of input preprocessing"""
+        model = NorbertBaseModel(model_config)
+        
+        # Test edge cases and unusual input shapes
+        edge_cases = [
+            {'text': torch.randn(1, 1024, 768)},  # Unusual text shape
+            {'image': torch.randn(1, 1, 112, 448)},  # Non-standard image dimensions
+            {'equation': torch.randn(1, 50)},  # Shorter equation representation
+            {'code': torch.randn(1, 256, 768)}  # Different code embedding size
+        ]
+        
+        for inputs in edge_cases:
+            try:
+                output = model(inputs)
+                assert output.size(0) == 10, f"Incorrect output for {inputs.keys()}"
+            except Exception as e:
+                pytest.fail(f"Failed to handle input: {inputs.keys()} - {str(e)}")
+    
     def test_tool_integration(self):
         """Test computational tool integration"""
         tool_config = {
