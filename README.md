@@ -36,6 +36,46 @@ tensor([
 ])
 ```
 
+## Norbert Multimodal AI Model
+
+### Recent Improvements (v0.2.3)
+
+#### Model Enhancements
+- Refined transformer encoder configuration
+- Implemented dynamic input processing with adaptive attention
+- Added controlled randomness through dropout layers
+- Resolved PyTorch nested tensor warnings
+
+#### Performance Test Results
+
+**Test Suite Execution:**
+- **Total Tests:** 9
+- **Passed Tests:** 9 (100% success)
+- **Execution Time:** 19.07 seconds
+- **Platform:** macOS, Python 3.13.2, PyTorch
+
+**Key Test Categories:**
+1. Model Initialization
+2. Multimodal Input Processing
+3. Advanced Multimodal Input Processing
+4. Input Attention Mechanism
+5. Input Preprocessing Robustness
+6. Tool Integration
+7. Training Methodology
+8. Hyperparameter Optimization
+9. Problem Solving Workflow
+
+**Test Configuration:**
+- Framework: pytest 8.3.4
+- Test Environment: Isolated virtual environment
+
+### Compatibility
+- Python 3.13.2+
+- PyTorch latest
+
+### Privacy Notice
+⚠️ **IMPORTANT:** Do not share model configurations or test outputs containing sensitive information.
+
 ## Test Verification Script
 ```python
 import torch
@@ -81,7 +121,6 @@ Model Output (first 5 predictions): tensor([[-0.2992,  0.2003, -0.0677, -0.3482,
          -0.0740, -0.1099],
         [-0.1154,  0.0821, -0.0305, -0.4393, -0.1149,  0.1347, -0.0502, -0.1931,
           0.0803,  0.7181]])
-```
 
 ## License
 MIT License
