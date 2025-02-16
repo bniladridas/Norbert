@@ -171,3 +171,7 @@ Model Output (first 5 predictions): tensor([[-0.2992,  0.2003, -0.0677, -0.3482,
 
 ## License
 MIT License
+
+## Roadmap
+
+For future improvements and features, please refer to the [ROADMAP.md](ROADMAP.md) file.
